@@ -31,8 +31,10 @@ function addIframeStyle(styles) {
     x.onload = function(){
 	    var y = x.contentDocument;
 	    y.getElementsByTagName("head")[0].appendChild(css);
-	    x.contentWindow.g_form.addErrorMessage("You are in a production environment, be careful what you do");
-		x.contentWindow.g_form.setReadOnly('script', true);
+	    if(x.src.indexOf('sys_script') >= 0){
+		    x.contentWindow.g_form.addErrorMessage("You are in a production environment, be careful what you do");
+			x.contentWindow.g_form.setReadOnly('script', true);	
+	    }
     }
 } 
 
@@ -46,7 +48,6 @@ if(document.getElementById('gsft_main') != null){
 }
 
 if(window.location.href.indexOf('sys_script') >= 0 ){
-	console.warn("is a script");
 	g_form.addErrorMessage("You are in a production environment, be careful what you do");
 	g_form.setReadOnly('script', true);
 }
