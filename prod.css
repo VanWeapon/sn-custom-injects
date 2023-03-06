@@ -1,11 +1,30 @@
-.navpage-layout {
-    border: 15px solid red;
-    animation: border-pulsate 2s infinite;
-    
+@keyframes border-pulsate {
+    0% {
+        border-color: rgba(255, 0, 0, 1);
+    }
+    50% {
+        border-color: rgba(120, 0, 0, 1);
+    }
+    100% {
+        border-color: rgba(255, 0, 0, 1);
+    }
 }
 
-@keyframes border-pulsate {
-    0%   { border-color: rgba(255, 0, 0, 1); }
-    50%  { border-color: rgba(100, 0, 0, 1); }
-    100% { border-color: rgba(255, 0, 0, 1); }
+body.section_header_body_no_scroll {
+    border: 15px solid red;
+    animation: border-pulsate 2s infinite;
 }
+
+body {
+    border: 15px solid red;
+    animation: border-pulsate 2s infinite;
+}
+
+/*
+No longer works in polaris
+*/
+/*.navpage-layout {*/
+/*    border: 15px solid red;*/
+/*    animation: border-pulsate 2s infinite;*/
+    
+/*}*/
