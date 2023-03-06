@@ -1,54 +1,28 @@
-/* Function to add style element */ 
-function addStyle(styles) { 
+if(!g_form && gsft_main) var g_form = gsft_main.g_form;
+if(!g_user && gsft_main) var g_user = gsft_main.g_user;
 
-    /* Create style document */ 
-    var css = document.createElement('style'); 
-    css.type = 'text/css'; 
+let path = top.location.pathname;
 
-    if (css.styleSheet)  
-        css.styleSheet.cssText = styles; 
-    else  
-        css.appendChild(document.createTextNode(styles)); 
+if (g_user.hasRoleExactly('security_admin')) {
+    return; //break glass by elevating
+}
 
-    /* Append style to the tag name */ 
-    document.getElementsByTagName("head")[0].appendChild(css); 
-} 
-
-/* Function to add style element */ 
-function addIframeStyle(styles) { 
-
-    /* Create style document */ 
-    var css = document.createElement('style'); 
-    css.type = 'text/css'; 
-
-    if (css.styleSheet)  
-        css.styleSheet.cssText = styles; 
-    else  
-        css.appendChild(document.createTextNode(styles)); 
-
-    /* Append style to the tag name */ 
-    var x = document.getElementById("gsft_main");
-    x.onload = function(){
-	    var y = x.contentDocument;
-	    y.getElementsByTagName("head")[0].appendChild(css);
-	    if(x.src.indexOf('sys_script') >= 0){
-		    x.contentWindow.g_form.addErrorMessage("You are in a production environment, be careful what you do");
-			x.contentWindow.g_form.setReadOnly('script', true);	
-	    }
+g_form.elements
+    .filter((el) => {
+        if (el.type == 'script' || el.type == 'script_plain' || el.type == 'xml') return true;
+    })
+    .map((el) => el.fieldName)
+    .forEach((fieldName) => {
+        g_form.setReadOnly(fieldName, true);
+        g_form.showFieldMsg(fieldName, 'Set read only because you are in prod', 'info', false);
+    });
+let dangerousPaths = ['script', 'sysauto'];
+for (var p of dangerousPaths) {
+    console.log(p);
+    if (path.includes(p)) {
+        console.log('true', p);
+        g_form.addInfoMessage('Warning: You are in production, careful what you change');
+    } else {
+        console.log('false', p);
     }
-} 
-
-/* Set the style */ 
-var styles = '.CodeMirror-code div { font-size:15px !important; font-family: "Fira Code" !important; }'; 
-
-/* Function call */ 
-addStyle(styles);
-if(document.getElementById('gsft_main') != null){
-  addIframeStyle(styles);
 }
-
-if(window.location.href.indexOf('sys_script') >= 0 ){
-	g_form.addErrorMessage("You are in a production environment, be careful what you do");
-	g_form.setReadOnly('script', true);
-}
-
